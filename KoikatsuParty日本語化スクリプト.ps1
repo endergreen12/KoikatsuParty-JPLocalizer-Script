@@ -28,19 +28,6 @@ Write-Host "必要なフォルダを作成中"
 New-Item -Path $pluginsFolderPath -ItemType Directory -Force
 New-Item -Path $patchersFolderPath -ItemType Directory -Force
 
-Write-Host "IllusionModdingAPIをインストール中"
-$moddingApiReleaseAssets = (Invoke-RestMethod -Uri "https://api.github.com/repos/IllusionMods/IllusionModdingAPI/releases/latest").assets
-foreach ( $asset in $moddingApiReleaseAssets )
-{
-    if ( $asset.name.Contains( "KK_ModdingAPI" ) )
-    {
-        Invoke-WebRequest -Uri $asset.browser_download_url -OutFile "ModdingAPI.zip"
-        break
-    }
-}
-Expand-Archive -Path "ModdingAPI.zip"
-Copy-Item -Path ".\ModdingAPI\BepInEx\plugins\*.dll" -Destination $pluginsFolderPath
-
 Write-Host "BepisPluginsのExtensibleSaveFormatをインストール中"
 $bepisPluginsReleaseAssets = (Invoke-RestMethod -Uri "https://api.github.com/repos/IllusionMods/BepisPlugins/releases/latest").assets
 foreach ( $asset in $bepisPluginsReleaseAssets )
@@ -57,6 +44,19 @@ $bepisPluginsFolderPath = Join-Path -Path $pluginsFolderPath -ChildPath "KK_Bepi
 New-Item -Path $bepisPluginsFolderPath -ItemType Directory -Force
 Copy-Item -Path ".\BepisPlugins\BepInEx\plugins\KK_BepisPlugins\ExtensibleSaveFormat.dll" -Destination $bepisPluginsFolderPath
 Copy-Item -Path ".\BepisPlugins\BepInEx\plugins\KK_BepisPlugins\LICENSE" -Destination $bepisPluginsFolderPath
+
+Write-Host "IllusionModdingAPIをインストール中"
+$moddingApiReleaseAssets = (Invoke-RestMethod -Uri "https://api.github.com/repos/IllusionMods/IllusionModdingAPI/releases/latest").assets
+foreach ( $asset in $moddingApiReleaseAssets )
+{
+    if ( $asset.name.Contains( "KK_ModdingAPI" ) )
+    {
+        Invoke-WebRequest -Uri $asset.browser_download_url -OutFile "ModdingAPI.zip"
+        break
+    }
+}
+Expand-Archive -Path "ModdingAPI.zip"
+Copy-Item -Path ".\ModdingAPI\BepInEx\plugins\*.dll" -Destination $pluginsFolderPath
 
 Write-Host "IllusionFixesのRestoreMissingFunctionsをインストール中"
 $illusionFixesReleaseAssets = (Invoke-RestMethod -Uri "https://api.github.com/repos/IllusionMods/IllusionFixes/releases/latest").assets
